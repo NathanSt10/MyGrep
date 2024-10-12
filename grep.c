@@ -1,13 +1,26 @@
+/*******************************************************************
+
+* Description: 
+* This C program implements modified versions of the 'grep' command commonly found in Unix-like operating systems. 
+* The 'grep' command is used to search for specific patterns within text files.
+
+Usage:
+* Compile it using a C compiler and run the executable from the command line with appropriate arguments.
+*    - ./main <pattern> <file> [-i] [-n]
+*    - optional arguments are specified in [ ]
+*******************************************************************/
+
 #include "text.h"
 
 void grepLite(int argc, char *argv[]) {
-    // TODO: First check if the correct number of arguments is provided
+    // Check program is recieving minimum required arguments
     if (argc < 3) {
         printf("Invalid amount of arguments. Required atleast 3, provided %d\n", argc);
         puts("Usage: grep <pattern> <filename> with optional [-i] for case insensitive search, [-n] for line number");
         return;
     }
 
+    // User pattern length validation
     char *pattern = argv[1];
     if (strlen(pattern) > 10){
         puts("Search word is too long. Word must be between 1 and 10 characters.");
@@ -15,6 +28,7 @@ void grepLite(int argc, char *argv[]) {
         return;
     }
     
+    // open user provided file
     FILE *fp = fopen(argv[2], "r");
     if (fp == NULL) {
         puts("File failed to open. Please try again with a valid file name.");
@@ -22,6 +36,7 @@ void grepLite(int argc, char *argv[]) {
         return;
     }
 
+    // user input validation on flag symbol. Check just '-' is not being provided
     if ((argc > 3 && strcmp(argv[3], "-") == 0) || (argc > 4 && strcmp(argv[4], "-") == 0)) {
         puts("Invalid flag.");
         puts("Usage: grep <pattern> <filename> with optional [-i] for case insensitive search, [-n] for line number");
@@ -39,6 +54,7 @@ void grepLite(int argc, char *argv[]) {
         ++lineCount;
         int pos = strcspn(line, "\n");
         line[pos] = '\0';
+        // case where both flags are active
         if (argc > 4) {
             char tmpLine[1024];
             strcpy(tmpLine, line);
@@ -53,12 +69,14 @@ void grepLite(int argc, char *argv[]) {
                 printf("%d %s\n", lineCount, line);
             }
         }
+        // case: number is printed before the line
         else if (strcmp(flag1, "-n") == 0) {
             if (strstr(line, pattern) != NULL) {
                 didPrint = 1;
                 printf("%d %s\n", lineCount, line);
             }
         }
+        // case: insensitive 
         else if (strcmp(flag1, "-i") == 0) {
             char tmpLine[1024];
             strcpy(tmpLine, line);
@@ -73,6 +91,7 @@ void grepLite(int argc, char *argv[]) {
                 printf("%s\n", line);
             }
         }
+        // no flags provided
         else {
             if (strstr(line, pattern) != NULL) {
                 didPrint = 1;
