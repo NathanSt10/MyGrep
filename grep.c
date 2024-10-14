@@ -52,8 +52,6 @@ void grepLite(int argc, char *argv[]) {
     int didPrint = 0;
     while (fgets(line, sizeof(line), fp)) {
         ++lineCount;
-        int pos = strcspn(line, "\n");
-        line[pos] = '\0';
         // case where both flags are active
         if (argc > 4) {
             char tmpLine[1024];
@@ -66,14 +64,14 @@ void grepLite(int argc, char *argv[]) {
             }
             if (strstr(tmpLine, pattern) != NULL) {
                 didPrint = 1;
-                printf("%d %s\n", lineCount, line);
+                printf("%d %s", lineCount, line);
             }
         }
         // case: number is printed before the line
         else if (strcmp(flag1, "-n") == 0) {
             if (strstr(line, pattern) != NULL) {
                 didPrint = 1;
-                printf("%d %s\n", lineCount, line);
+                printf("%d %s", lineCount, line);
             }
         }
         // case: insensitive 
@@ -88,14 +86,14 @@ void grepLite(int argc, char *argv[]) {
             }
             if (strstr(tmpLine, pattern) != NULL) {
                 didPrint = 1;
-                printf("%s\n", line);
+                printf("%s", line);
             }
         }
         // no flags provided
         else {
             if (strstr(line, pattern) != NULL) {
                 didPrint = 1;
-                printf("%s\n", line);
+                printf("%s", line);
             }
         }        
     }
